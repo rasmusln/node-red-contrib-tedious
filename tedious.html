@@ -1,0 +1,42 @@
+<script type="text/javascript">
+    RED.nodes.registerType('tedious', {
+        category: 'storage',
+        color: '#a6bbcf',
+        defaults: {
+            name: { value: "tedious" }
+        },
+        inputs: 1,
+        outputs: 1,
+        label: function () {
+            return this.name || "tedious";
+        },
+        credentials: {
+            server: { type: "text" },
+            username: { type: "text" },
+            password: { type: "password" }
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="tedious">
+    <div class="form-row">
+        <label for="node-input-server"><i class="fa fa-bookmark"></i>Server Address</label>
+        <input type="text" id="node-input-server">
+    </div>
+    <div class="form-row">
+        <label for="node-input-username"><i class="fa fa-bookmark"></i>Username</label>
+        <input type="text" id="node-input-username">
+    </div>
+    <div class="form-row">
+        <label for="node-input-password"><i class="fa fa-bookmark"></i>Password</label>
+        <input type="password" id="node-input-password">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-bookmark"></i>Name</label>
+        <input type="text" id="node-input-name">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="tedious">
+    <p>Queries from or insert into a MS Sql database using the tedious package</p>
+</script>
