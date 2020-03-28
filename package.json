@@ -4,10 +4,14 @@
   "description": "A Node-RED node wrapping tedious",
   "node-red": {
     "nodes": {
-      "tedious": "tedious.js"
+      "tedious": "tedious.js",
+      "connection": "tedious-connection.js"
     }
   },
-  "keywords": [ "node-red", "tedious" ],
+  "keywords": [
+    "node-red",
+    "tedious"
+  ],
   "author": "rasmusln",
   "license": "MIT",
   "dependencies": {

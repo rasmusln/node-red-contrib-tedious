@@ -2,28 +2,10 @@ module.exports = function (RED) {
     const Repository = require('./repository.js').Repository;
     const createConfig = require('./repository.js').createConfig;
 
-    RED.nodes.registerType("tedious", Tedious, {
-        credentials: {
-             server: { type: "text" },
-             username: { type: "text" },
-             password: { type: "password" }
-        },
-        defaults: {
-            name: { value: "tedious" }
-        }
-    });
-
     function Tedious (config) {
         RED.nodes.createNode(this, config);
 
         let node = this;
-
-        let repositoryConfig = createConfig(
-            node.credentials.server,
-            node.credentials.username, 
-            node.credentials.password);
-
-        let repository = new Repository(repositoryConfig, node);
 
         var nodeStatus = { fill: null, shape: null, text: null };
         let setNodeStatus = (fill, shape, text) => {
@@ -34,6 +16,20 @@ module.exports = function (RED) {
             };
             node.status(nodeStatus);
         }
+        
+        this.connection = RED.nodes.getNode(config.connection);
+        console.log(this.connection);
+        if (!this.connection) {
+            setNodeStatus("red", "ring", "no connection"); 
+        }
+
+        let repositoryConfig = createConfig(
+            this.connection.server,
+            this.connection.username, 
+            this.connection.password);
+
+
+        let repository = new Repository(repositoryConfig, node);
 
         repository.on('connect', () => {
             setNodeStatus("green", "dot", "connected");
@@ -66,4 +62,6 @@ module.exports = function (RED) {
             }
         });
     }
+    
+    RED.nodes.registerType("tedious", Tedious);
 }
