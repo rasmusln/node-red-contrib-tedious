@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-tedious",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A Node-RED node wrapping tedious",
   "node-red": {
     "nodes": {
