@@ -18,12 +18,17 @@ function createConfig (server, username, password, port) {
 
 class Repository extends EventEmitter {
 
-    constructor(config, logger) {
+    constructor(config, logger, rowByRow) {
         super();
         this.config = config;
         this.logger = logger;
+        this.rowByRow = rowByRow;
         this.client = null;
         this.connected = false;
+
+        if (!this.rowByRow) {
+            this.config.options = { rowCollectionOnRequestCompletion: true };
+        }
     }
 
     get isConnected() {
@@ -55,22 +60,26 @@ class Repository extends EventEmitter {
     }
 
     query(statement, row, done) {
-        let request = new Request(statement, (err, rowCount) => {
+        let request = new Request(statement, (err, rowCount, rows) => {
             this.logger.log(err);
+
             if (err) {
                 done(err);
             }
 
             this.logger.log(rowCount + 'rows returned');
-            done(err);
+
+            if (this.rowByRow) {
+                done(err);
+            } else {
+                done(null, rows);
+            }
         });
 
         request.on('row', (columns) => {
-            row(columns);
-        });
-
-        request.on('done', () => {
-            done();
+            if (this.rowByRow) {
+                row(columns);
+            }
         });
 
         this.ensureConnected((err, client) => {

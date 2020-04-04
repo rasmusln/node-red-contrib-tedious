@@ -29,7 +29,7 @@ module.exports = function (RED) {
             this.connection.password);
 
 
-        let repository = new Repository(repositoryConfig, node);
+        let repository = new Repository(repositoryConfig, node, config.rowByRow);
 
         repository.on('connect', () => {
             setNodeStatus("green", "dot", "connected");
@@ -46,10 +46,13 @@ module.exports = function (RED) {
             repository.query(msg.payload, (row) => {
                 msg.payload = row;
                 send(msg);
-            }, (err) => {
+            }, (err, rows) => {
                 if (err) {
                     node.error("Failed to query \n" + err.toString());
                     setNodeStatus(null, null, "Failed to send");
+                } else if (rows != undefined && rows != null) {
+                    msg.payload = rows;
+                    send(msg);
                 }
                 done();
             });
