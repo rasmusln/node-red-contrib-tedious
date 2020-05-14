@@ -28,7 +28,6 @@ module.exports = function (RED) {
             this.connection.username, 
             this.connection.password);
 
-
         let repository = new Repository(repositoryConfig, node, config.rowByRow);
 
         repository.on('connect', () => {
@@ -44,8 +43,11 @@ module.exports = function (RED) {
             }
 
             repository.query(msg.payload, (row) => {
-                msg.payload = row;
-                send(msg);
+                let row_msg = {
+                    'topic': msg.topic,
+                    'payload': row
+                };
+                send(row_msg);
             }, (err, rows) => {
                 if (err) {
                     node.error("Failed to query \n" + err.toString());

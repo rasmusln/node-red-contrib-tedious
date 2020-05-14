@@ -67,7 +67,7 @@ class Repository extends EventEmitter {
                 done(err);
             }
 
-            this.logger.log(rowCount + 'rows returned');
+            this.logger.log(rowCount + ' rows returned');
 
             if (this.rowByRow) {
                 done(err);
